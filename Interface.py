@@ -258,13 +258,13 @@ class Ui_Widget(QtWidgets.QMainWindow):
         self.checkBoxDownloadPDF.setText(_translate("MainWindow", "是否自动下载PDF"))
         self.label_7.setText(_translate("MainWindow", "下载线程数"))
         self.label_6.setText(_translate("MainWindow", "爬取结果导出"))
-        self.lineEditResultSaveFile.setText(_translate("MainWindow", 'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/Results.xlsx'))
+        self.lineEditResultSaveFile.setText(_translate("MainWindow", os.path.expanduser('~') + r'/Downloads/GoogleScholar/Results.xlsx'))
         self.pushButtonSelectResultSaveFile.setText(_translate("MainWindow", "选择文件"))
         self.label_8.setText(_translate("MainWindow", "PDF链接存储文件"))
-        self.lineEditLinkSaveFile.setText(_translate("MainWindow", 'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDFList.txt'))
+        self.lineEditLinkSaveFile.setText(_translate("MainWindow", os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDFList.txt'))
         self.pushButtonSelectLinkSaveFile.setText(_translate("MainWindow", "选择文件"))
         self.label_9.setText(_translate("MainWindow", "PDF保存路径"))
-        self.lineEditPDFSavePath.setText(_translate("MainWindow", 'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDF'))
+        self.lineEditPDFSavePath.setText(_translate("MainWindow", os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDF'))
         self.pushButtonSelectPDFSavePath.setText(_translate("MainWindow", "选择路径"))
         self.groupBox.setTitle(_translate("MainWindow", "搜索设置"))
         self.label.setText(_translate("MainWindow", "搜索内容"))
@@ -330,7 +330,7 @@ class Ui_Widget(QtWidgets.QMainWindow):
                                     "Text Files (*.xlsx);;All Files (*)")   #设置文件扩展名过滤,注意用双分号间隔
         self.lineEditResultSaveFile.setText(fileName)
         if fileName=="":
-            self.lineEditResultSaveFile.setText(r'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/Results.xlsx')
+            self.lineEditResultSaveFile.setText(os.path.expanduser('~') + r'/Downloads/GoogleScholar/Results.xlsx')
     
     # 选择PDF链接保存文件
     def selectLinkSaveFile(self):
@@ -340,14 +340,14 @@ class Ui_Widget(QtWidgets.QMainWindow):
                                     "Text Files (*.txt);;All Files (*)")   #设置文件扩展名过滤,注意用双分号间隔
         self.lineEditLinkSaveFile.setText(fileName)
         if fileName=="":
-            self.lineEditLinkSaveFile.setText(r'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDFList.txt')
+            self.lineEditLinkSaveFile.setText(os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDFList.txt')
     
     # 选择PDF保存文件夹
     def selectPDFSavePath(self):
         fileName =  QFileDialog.getExistingDirectory()    # 选择路径
         self.lineEditPDFSavePath.setText(fileName)
         if fileName=="":
-            self.lineEditPDFSavePath.setText(r'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDF')
+            self.lineEditPDFSavePath.setText(os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDF')
 
     # 选择agents保存文件
     def selectAgents(self):
@@ -394,7 +394,7 @@ class Ui_Widget(QtWidgets.QMainWindow):
     # 设置导出PDF链接到文件
     def setSavePDFLink(self):
         if self.checkBoxSavePDFLink.isChecked():
-            self.lineEditLinkSaveFile.setText(r'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDFList.txt')
+            self.lineEditLinkSaveFile.setText(os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDFList.txt')
             self.lineEditLinkSaveFile.setEnabled(True)
             self.pushButtonSelectLinkSaveFile.setEnabled(True)
         else:
@@ -405,7 +405,7 @@ class Ui_Widget(QtWidgets.QMainWindow):
     # 设置自动下载PDF
     def setSavePDF(self):
         if self.checkBoxDownloadPDF.isChecked():
-            self.lineEditPDFSavePath.setText(r'C:/Users/' + os.environ['USERNAME'] + r'/Downloads/GoogleScholar/PDF')
+            self.lineEditPDFSavePath.setText(os.path.expanduser('~') + r'/Downloads/GoogleScholar/PDF')
             self.lineEditPDFSavePath.setEnabled(True)
             self.pushButtonSelectPDFSavePath.setEnabled(True)
         else:
@@ -556,6 +556,7 @@ class Ui_Widget(QtWidgets.QMainWindow):
         # self.textEditLog.append('开始爬取...\n大约需要 {}min ，请耐心等待！'.format(pre_time))#子线程更新不了
         self.updated.emit('\n\n开始爬取...\n大约需要 {}min ，请耐心等待！'.format(pre_time))
         pages = self.spinBoxSearchPages.value()    # 获取爬取的页数
+        print(f"pages: {pages}")
         file_path = self.lineEditResultSaveFile.text()    # 获取结果保存文件
         detailFlag = self.checkBoxDetails.isChecked()    # 是否爬取论文详情
         pdfSavePath = self.lineEditPDFSavePath.text()    # PDF下载保存路径
@@ -649,7 +650,7 @@ class Ui_Widget(QtWidgets.QMainWindow):
             # time.sleep(1)
             # 设置进度条进度
             progressBarValue = page_count/pages*100
-            self.progressBar.setValue(progressBarValue - 3)
+            self.progressBar.setValue(int(progressBarValue) - 3)
 
             # 判断线程是否暂停
             self.pauseFlag.wait()
