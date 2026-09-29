@@ -88,12 +88,18 @@ def get_data(url, headers, proxies):
     # print('--------------正在使用urllib获取数据--------------')
     print('获取网页数据...')
     cookie = cookielib.CookieJar()    # 写到最后才发现好多网站需要cookie，索性就在这儿设置了
-    request.build_opener()
-    opener = request.build_opener(request.ProxyHandler(proxies), urllib.request.HTTPCookieProcessor(cookie))    # 设置代理和cookie处理器
-    request.install_opener(opener)    # 安装代理
+    # request.build_opener()
+    # opener = request.build_opener(request.ProxyHandler(proxies), urllib.request.HTTPCookieProcessor(cookie))    # 设置代理和cookie处理器
+    # request.install_opener(opener)    # 安装代理
     req = request.Request(url, headers=headers)    # 设置请求
     # response = request.urlopen(req)    # 打开url
     # 准备使用try，有点小毛病，待改进
+
+    # 打印 Request 对象的信息
+    print("URL:", req.full_url)
+    print("Method:", req.get_method())
+    print("Headers:", req.headers)
+
     try:
         response = request.urlopen(req)    # 打开url
         print("Connection Succeeded!")
@@ -105,7 +111,7 @@ def get_data(url, headers, proxies):
             data = response.read()
         # print(data)    # 输出处理后的数据
         del cookie
-        del opener
+        # del opener
         response.close()
         del response
         gc.collect()
